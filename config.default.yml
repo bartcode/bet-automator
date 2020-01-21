@@ -1,0 +1,9 @@
+api:
+  url: https://api.the-odds-api.com/v3
+  key: xxxxxx
+  region: eu
+  sites:
+    available:
+      - unibet
+      - williamhill
+      - betfair
