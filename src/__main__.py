@@ -6,6 +6,8 @@ import logging.config
 import os
 import sys
 
+import pandas as pd
+
 from src.api.odds import OddsAPI
 from src.autobet.autobet import AutoBet
 
@@ -74,10 +76,12 @@ def main() -> None:
         odds = odds_list if odds_list else api.get_odds(sport=args.sport)
 
         autobet = AutoBet(odds)
-        suggestions = autobet.make_suggestions(args.spend)
+        suggestions = pd.DataFrame(autobet.make_suggestions())
 
-        LOGGER.info('Suggestions are as follows:\n%s', suggestions)
-        # ...
+        pd.set_option('display.max_rows', suggestions.shape[0] + 1)
+
+        LOGGER.info('Suggestions are as follows:')
+        LOGGER.info('\n%s', suggestions.sort_values(by='profit', ascending=False))
 
 
 if __name__ == '__main__':

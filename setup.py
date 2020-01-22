@@ -7,6 +7,7 @@ setup(
     python_requires='>=3.7',
     install_requires=[
         'requests==2.22.0',
+        'pandas==0.25.3',
     ],
     packages=find_packages(),
     include_package_data=True,

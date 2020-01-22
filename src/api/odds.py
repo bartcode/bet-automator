@@ -5,7 +5,7 @@ import json
 import logging
 import os
 import sys
-from typing import Optional, Dict, Any, List, Union
+from typing import Optional, Dict, Any, List
 
 import requests
 
@@ -35,13 +35,6 @@ class OddsAPI:
         :return: Response dictionary.
         """
         LOGGER.info('Called %s with params: %s', os.path.join(self._URL, f'{method}'), params)
-
-        # TODO: Remove dummy calls
-        if method == 'sports':
-            return json.loads(open('./data/sports.json').read())['data']
-
-        if method == 'odds':
-            return json.loads(open('./data/tennis.json').read())['data']
 
         if method not in ['sports', 'odds']:
             raise NotImplementedError(f'Request method {method} does not exist.')

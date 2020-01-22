@@ -30,7 +30,6 @@ class Odds:
     sites: List[Site]
     sites_count: int
 
-    def __repr__(self) -> str:
-        return f'Odds(key={self.sport_key}, nice={self.sport_nice}, teams={self.teams}, ' \
-               f'commence_time={self.commence_time}, home_team={self.home_team}, sites={self.sites}, ' \
-               f'sites_count={self.sites_count})'
+    @property
+    def away_team(self):
+        return self.teams[abs(self.teams.index(self.home_team) - 1)]
