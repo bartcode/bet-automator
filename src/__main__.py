@@ -48,13 +48,6 @@ def main() -> None:
         help='Select sport to optimise bets.',
     )
 
-    parser.add_argument(
-        '-m', '--spend', '--money',
-        default=10,
-        type=float,
-        help='Money to spend per suggested bet.',
-    )
-
     args, _ = parser.parse_known_args()
 
     api = OddsAPI()
