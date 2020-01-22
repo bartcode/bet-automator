@@ -14,18 +14,14 @@ LOGGER = logging.getLogger(__name__)
 
 @dataclass
 class AutoBetStats:
+    """Allow easily accessible statistics object creation"""
     min_index: int
     min_value: float
     max_index: int
     max_value: float
 
-    def __gt__(self, other: AutoBetStats) -> bool:
-        return self.min_value > other.min_value
-
-    def __lt__(self, other: AutoBetStats) -> bool:
-        return not self.min_value > other.min_value
-
     def sure_bet(self, other: AutoBetStats) -> Tuple[bool, int, int]:
+        """Determine whether a sure bet can be found"""
         sure_bet_max = 1 / self.max_value + 1 / other.max_value
 
         if sure_bet_max < 1:
@@ -34,21 +30,29 @@ class AutoBetStats:
         return False, 0, 0
 
     def sure_bet_profit(self, other: AutoBetStats) -> float:
+        """Determine the most profitable bet."""
         return 1 - (1 / self.max_value + 1 / other.max_value)
 
 
 class AutoBet:
+    """
+    Automatically find the right bets.
+    """
+
     def __init__(self, odds: List[Odds]):
+        """Initialise instance."""
         self._odds = odds
 
     @staticmethod
     def minmax(odds: List[float]) -> AutoBetStats:
+        """Find the minimum and maximum values for the odds across all sites."""
         min_index, min_value = min(enumerate(odds), key=lambda p: p[1])
         max_index, max_value = max(enumerate(odds), key=lambda p: p[1])
 
         return AutoBetStats(min_index, min_value, max_index, max_value)
 
     def make_suggestions(self) -> List[Dict[str, Any]]:
+        """Make suggestions for sure bets."""
         suggestions = []
         for match in self._odds:
             if match.sites:
