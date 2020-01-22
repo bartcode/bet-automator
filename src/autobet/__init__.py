@@ -1,0 +1,3 @@
+"""
+Autobet module.
+"""

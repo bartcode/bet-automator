@@ -16,6 +16,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 class OddsAPI:
+    """Connect to the-odds-api."""
+
     def __init__(self, config_file: Optional[str] = None):
         """
         Initialise odds API.
@@ -23,10 +25,10 @@ class OddsAPI:
         """
         config = load_config(config_file if config_file else os.path.join(sys.prefix, 'autobet', 'config.yml'))
 
-        self._KEY = config.get('api', {}).get('key', '')
-        self._URL = config.get('api', {}).get('url', '')
-        self._REGION = config.get('api', {}).get('region', 'eu')
-        self._SITES = config.get('api', {}).get('sites', [])
+        self._key = config.get('api', {}).get('key', '')
+        self._url = config.get('api', {}).get('url', '')
+        self._region = config.get('api', {}).get('region', 'eu')
+        self._sites = config.get('api', {}).get('sites', [])
 
     def request(self, method: str, **params) -> Any:
         """
@@ -34,14 +36,14 @@ class OddsAPI:
         :param method: Either odds or sports.
         :return: Response dictionary.
         """
-        LOGGER.info('Called %s with params: %s', os.path.join(self._URL, f'{method}'), params)
+        LOGGER.info('Called %s with params: %s', os.path.join(self._url, f'{method}'), params)
 
         if method not in ['sports', 'odds']:
             raise NotImplementedError(f'Request method {method} does not exist.')
 
         response = requests.get(
-            os.path.join(self._URL, f'{method}'),
-            params={**{'api_key': self._KEY}, **params}
+            os.path.join(self._url, f'{method}'),
+            params={**{'api_key': self._key}, **params}
         )
 
         if response.status_code == 200:
@@ -71,7 +73,7 @@ class OddsAPI:
         """
         Get list of odds for a specific sport.
         :param sport: Sports keys
-        :return: List of odds. 
+        :return: List of odds.
         """""
         sports_keys = self.get_sports_key(sport)
 
@@ -79,12 +81,12 @@ class OddsAPI:
 
         for key in sports_keys:
             if input(f'Would you like to retrieve data for {key}? [Y/n]').lower() in ['', 'y', 'yes']:
-                odds_list = self.request('odds', sport=key, region=self._REGION)
+                odds_list = self.request('odds', sport=key, region=self._region)
 
                 for odds_item in odds_list:
                     odds_item['sites'] = [Site(**s)
                                           for s in odds_item['sites']
-                                          if s['site_key'] in self._SITES or not self._SITES]
+                                          if s['site_key'] in self._sites or not self._sites]
 
                     odds.append(Odds(**odds_item))
 

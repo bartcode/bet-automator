@@ -7,6 +7,9 @@ from typing import Dict, List
 
 @dataclass
 class Site:
+    """
+    Site object
+    """
     site_key: str
     site_nice: str
     last_update: int
@@ -32,4 +35,5 @@ class Odds:
 
     @property
     def away_team(self):
+        """Find away team"""
         return self.teams[abs(self.teams.index(self.home_team) - 1)]
